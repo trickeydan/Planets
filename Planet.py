@@ -50,3 +50,8 @@ class Planet(pygame.sprite.Sprite):
     def goto(self,pos):
         self.rect.x = pos.x - self.radius /2
         self.rect.y = pos.y - self.radius /2
+
+    def kEnergy(self):
+        return 0.5 * self.mass * self.velocity.magnitude() ** 2
+    def gEnergy(self,sun):
+        return Planet.G * self.mass * sun.mass / self.pos.subtract(sun.pos).magnitude()

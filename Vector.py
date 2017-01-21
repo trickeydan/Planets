@@ -16,12 +16,14 @@ class Vector():
         return self + vect
 
     def __iadd__(self,vect):
-        print("IADd")
         self.x += vect.x
         self.y += vect.y
 
     def __sub__(self,vect):
         return Vector(self.x - vect.x,self.y - vect.y)
+
+    def subtract(self,vect):
+        return self - vect
 
     def __mul__(self,scalar):
         return Vector(self.x * scalar,self.y * scalar)
