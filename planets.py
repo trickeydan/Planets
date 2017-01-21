@@ -21,12 +21,19 @@ pygame.display.set_caption("Planets Simulation")
 
 sprites = pygame.sprite.Group()
 
-# Create a stationary planet.
-planet = Planet(WHITE,20,Vector(screen_width/2,screen_height/2),Vector(0,0),True)
-sprites.add(planet)
+# Create a sun.
+sun = Planet(WHITE,20,Vector(screen_width/2,screen_height/2),Vector(0,0),True)
+sprites.add(sun)
+
+planets = pygame.sprite.Group()
 
 satellite = Planet(GREEN,10,Vector(screen_width/4,screen_height/4),Vector(2,-1),False)
 sprites.add(satellite)
+planets.add(satellite)
+
+satellite2 = Planet(RED,12,Vector(3 * screen_width/4,3 * screen_height/4),Vector(2,-1),False)
+sprites.add(satellite2)
+planets.add(satellite2)
 
 
 done = False
@@ -38,9 +45,14 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
 
-    screen.fill(BLACK)
     sprites.update(sprites)
+    planets_hit = pygame.sprite.spritecollide(sun,planets, True)
+
+    screen.fill(BLACK)
     sprites.draw(screen)
+    for obj in sprites:
+        obj.velocity.draw(screen,obj.centPos())
+
 
     clock.tick(60)
     pygame.display.flip()

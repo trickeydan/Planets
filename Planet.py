@@ -3,7 +3,7 @@ from Vector import Vector
 
 class Planet(pygame.sprite.Sprite):
 
-    G = 1
+    G = 0.3
 
     def __init__(self, colour,mass,pos,velocity,fixed):
         self.radius = int(0.05 * mass * mass)
@@ -43,6 +43,9 @@ class Planet(pygame.sprite.Sprite):
 
             self.pos = self.pos + self.velocity
             self.goto(self.pos)
+
+    def centPos(self):
+        return self.pos + Vector(self.radius /2,self.radius /2)
 
     def goto(self,pos):
         self.rect.x = pos.x - self.radius /2
