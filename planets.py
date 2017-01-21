@@ -23,16 +23,16 @@ pygame.display.set_caption("Planets Simulation")
 sprites = pygame.sprite.Group()
 
 # Create a sun.
-sun = Planet(WHITE,20,Vector(screen_width/2,screen_height/2),Vector(0,0),True)
+sun = Planet(WHITE,20,Vector([screen_width/2,screen_height/2]),Vector([0,0]),True)
 sprites.add(sun)
 
 planets = pygame.sprite.Group()
 
-satellite = Planet(GREEN,10,Vector(screen_width/4,screen_height/4),Vector(2,-1),False)
+satellite = Planet(GREEN,10,Vector([screen_width/4,screen_height/4]),Vector([2,-1]),False)
 sprites.add(satellite)
 planets.add(satellite)
 
-satellite2 = Planet(RED,12,Vector(3 * screen_width/4,3 * screen_height/4),Vector(2,-1),False)
+satellite2 = Planet(RED,12,Vector([3 * screen_width/4,3 * screen_height/4]),Vector([2,-1]),False)
 sprites.add(satellite2)
 planets.add(satellite2)
 
@@ -42,6 +42,7 @@ kedisplay = Text([1,1 + (planetcount.height() * 2)],WHITE)
 edisplay = Text([1,1 + (planetcount.height() * 3)],WHITE)
 
 done = False
+addingPlanet = False
 
 clock = pygame.time.Clock()
 
@@ -51,24 +52,41 @@ while not done:
             done = True
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             done = True
+        elif event.type == pygame.MOUSEBUTTONDOWN and not addingPlanet:
+            addingPlanet = True
+            mClickPos = Vector(pygame.mouse.get_pos())
+        elif event.type == pygame.MOUSEBUTTONUP and addingPlanet:
+            addingPlanet = False
 
-    sprites.update(sprites)
-    planets_hit = pygame.sprite.spritecollide(sun,planets, True)
-    GPE = 0
-    KE = 0
-    for obj in planets:
-        GPE += obj.gEnergy(sun)
-        KE += obj.kEnergy()
+            newplanet = Planet(RED,10,mClickPos,delta,False)
+            sprites.add(newplanet)
+            planets.add(newplanet)
 
-    planetcount.text = "Planet Count: " + str(len(planets))
-    gpdisplay.text = "GPE: " + "{0:.2f}".format(GPE)
-    kedisplay.text = "KE: " + "{0:.2f}".format(KE)
-    edisplay.text = "Total E: " + "{0:.2f}".format(GPE+KE)
+    if addingPlanet:
+        mCurrPos = Vector(pygame.mouse.get_pos())
+        delta = mClickPos - mCurrPos
+
+    else:
+        planets.update(planets,sun)
+        planets_hit = pygame.sprite.spritecollide(sun,planets, True)
+        GPE = 0
+        KE = 0
+        for obj in planets:
+            GPE += obj.gEnergy(sun)
+            KE += obj.kEnergy()
+
+        planetcount.text = "Planet Count: " + str(len(planets))
+        gpdisplay.text = "GPE: " + "{0:.2f}".format(GPE)
+        kedisplay.text = "KE: " + "{0:.2f}".format(KE)
+        edisplay.text = "Total E: " + "{0:.2f}".format(GPE+KE)
 
     screen.fill(BLACK)
     sprites.draw(screen)
     for obj in sprites:
         obj.velocity.draw(screen,obj.centPos())
+
+    if addingPlanet:
+        delta.draw(screen,mClickPos)
 
     planetcount.render(screen)
     gpdisplay.render(screen)

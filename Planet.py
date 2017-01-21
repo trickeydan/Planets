@@ -22,12 +22,12 @@ class Planet(pygame.sprite.Sprite):
 
         self.goto(self.pos)
 
-    def update(self,objects):
+    def update(self,objects,sun):
 
         if not self.fixed:
             self.rect.y += 1
 
-            totalforce = Vector(0,0)
+            totalforce = Vector([0,0])
 
             for obj in objects:
                 if obj != self:
@@ -40,12 +40,14 @@ class Planet(pygame.sprite.Sprite):
             acc = totalforce.divide(self.mass)
             self.velocity = self.velocity - acc
 
-
             self.pos = self.pos + self.velocity
             self.goto(self.pos)
 
+            if self.pos.subtract(sun.pos).magnitude() > 1500:
+                self.kill()
+
     def centPos(self):
-        return self.pos + Vector(self.radius /2,self.radius /2)
+        return self.pos + Vector([self.radius /2,self.radius /2])
 
     def goto(self,pos):
         self.rect.x = pos.x - self.radius /2
