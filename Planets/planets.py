@@ -3,12 +3,14 @@ import random
 from Planet import Planet
 from Vector import Vector
 from Text import Text
+from random import randint
 
 # Define some colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
+
+def randomColour():
+    return (randint(0,255),randint(0,255),randint(0,255))
 
 # Initialize Pygame
 pygame.init()
@@ -28,11 +30,11 @@ sprites.add(sun)
 
 planets = pygame.sprite.Group()
 
-satellite = Planet(GREEN,10,Vector([screen_width/4,screen_height/4]),Vector([2,-1]),False)
+satellite = Planet(randomColour(),10,Vector([screen_width/4,screen_height/4]),Vector([2,-1]),False)
 sprites.add(satellite)
 planets.add(satellite)
 
-satellite2 = Planet(RED,12,Vector([3 * screen_width/4,3 * screen_height/4]),Vector([2,-1]),False)
+satellite2 = Planet(randomColour(),12,Vector([3 * screen_width/4,3 * screen_height/4]),Vector([2,-1]),False)
 sprites.add(satellite2)
 planets.add(satellite2)
 
@@ -43,6 +45,7 @@ edisplay = Text([1,1 + (planetcount.height() * 3)],WHITE)
 
 done = False
 addingPlanet = False
+sunExists = True
 
 clock = pygame.time.Clock()
 
@@ -58,7 +61,7 @@ while not done:
         elif event.type == pygame.MOUSEBUTTONUP and addingPlanet:
             addingPlanet = False
 
-            newplanet = Planet(RED,10,mClickPos,delta,False)
+            newplanet = Planet(randomColour(),randint(5,15),mClickPos,delta,False)
             sprites.add(newplanet)
             planets.add(newplanet)
 
@@ -81,7 +84,10 @@ while not done:
         edisplay.text = "Total E: " + "{0:.2f}".format(GPE+KE)
 
     screen.fill(BLACK)
-    sprites.draw(screen)
+    if sun:
+        sprites.draw(screen)
+    else:
+        planets.draw()
     for obj in sprites:
         obj.velocity.draw(screen,obj.centPos())
 
