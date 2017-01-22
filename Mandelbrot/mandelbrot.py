@@ -3,9 +3,10 @@ from Complex import Complex
 from Text import Text
 
 xcen = 0
-xzoom = 2 # Total width /2
+zoom = 2 # Total width /2
 ycen = 0
-yzoom = xzoom #Keeps scaling nice
+n = 40
+
 def mapvalue(value,normalmin,normalmax,scalemin,scalemax):
     deltascale = scalemax - scalemin
     deltanormal = normalmax - normalmin
@@ -13,19 +14,37 @@ def mapvalue(value,normalmin,normalmax,scalemin,scalemax):
     return scalemin + deltascale * ratio
 
 
-def diverge(c):
+def diverge(c,maxn):
     z = Complex(0,0)
     n = 0
-    while n < 100:
+    while n < maxn:
         z = z.squared() + c
         if z.modulus() > 16:
-            break
+            return n
         n += 1
 
     return n
 
+def draw(screen_width,screen_height,xcen,ycen,zoom,screen,maxn):
+    for x in range(1,screen_width):
+        for y in range(1,screen_height):
+            c = Complex(mapvalue(x,0,screen_width,xcen - zoom,xcen + zoom),mapvalue(y,0,screen_height,ycen - zoom,ycen + zoom))
+            n = diverge(c,maxn)
+            brightness = mapvalue(n,0,maxn,0,255)
+            try:
+                screen.fill((brightness,brightness,brightness), ([x,y], (1, 1)))
+            except:
+                print(brightness)
+
+def updatetext(screen,postext,title):
+    screen.fill(BLACK,([0,0],[max(title.width(),postext.width())+1,1 + postext.height() * 2]))
+    title.render(screen)
+    postext.render(screen)
+
+
 WHITE = (255,255,255)
 BLACK = (0,0,0)
+RED = (255,51,51)
 
 # Initialize Pygame
 pygame.init()
@@ -49,12 +68,7 @@ pygame.display.flip()
 clock = pygame.time.Clock()
 done = False
 
-for x in range(1,screen_width):
-    for y in range(1,screen_height):
-        c = Complex(mapvalue(x,0,screen_width,xcen - xzoom,xcen + xzoom),mapvalue(y,0,screen_height,ycen - yzoom,ycen + yzoom))
-        n = diverge(c)
-        brightness = mapvalue(n,0,100,0,255)
-        screen.fill((brightness,brightness,brightness), ([x,y], (1, 1)))
+draw(screen_width,screen_height,xcen,ycen,zoom,screen,n)
 
 title.text = "Mandelbrot Set"
 title.render(screen)
@@ -65,11 +79,23 @@ while not done:
             done = True
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             done = True
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_n:
+            n = int(input("Enter a new value of n: "))
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            xcen = mapvalue(pos[0],0,screen_width,xcen - zoom,xcen + zoom)
+            ycen = mapvalue(pos[1],0,screen_height,ycen - zoom,ycen + zoom)
+            zoom = zoom /2
+            print("Zoom: " + str(zoom))
+            postext.text = "Generating new set.."
+            updatetext(screen,postext,title)
+            pygame.display.flip()
+            draw(screen_width,screen_height,xcen,ycen,zoom,screen,n)
+
+
     pos = pygame.mouse.get_pos()
     postext.text = "X:" + str(pos[0]) + " Y:" + str(pos[1])
-    screen.fill(BLACK,([0,0],[max(title.width(),postext.width())+1,1 + postext.height() * 2]))
-    title.render(screen)
-    postext.render(screen)
+    updatetext(screen,postext,title)
     clock.tick(30)
     pygame.display.flip()
 
