@@ -2,9 +2,9 @@ import math, pygame
 from Complex import Complex
 from Text import Text
 
-xmin = -1.7
-xzoom = 1
-ymin = -1
+xcen = 0
+xzoom = 2 # Total width /2
+ycen = 0
 yzoom = xzoom #Keeps scaling nice
 def mapvalue(value,normalmin,normalmax,scalemin,scalemax):
     deltascale = scalemax - scalemin
@@ -51,7 +51,7 @@ done = False
 
 for x in range(1,screen_width):
     for y in range(1,screen_height):
-        c = Complex(mapvalue(x,0,screen_width,xmin,xmin + xzoom),mapvalue(y,0,screen_height,ymin,ymin + yzoom))
+        c = Complex(mapvalue(x,0,screen_width,xcen - xzoom,xcen + xzoom),mapvalue(y,0,screen_height,ycen - yzoom,ycen + yzoom))
         n = diverge(c)
         brightness = mapvalue(n,0,100,0,255)
         screen.fill((brightness,brightness,brightness), ([x,y], (1, 1)))
