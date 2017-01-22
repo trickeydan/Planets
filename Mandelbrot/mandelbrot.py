@@ -2,6 +2,10 @@ import math, pygame
 from Complex import Complex
 from Text import Text
 
+xmin = -1.7
+xzoom = 1
+ymin = -1
+yzoom = xzoom #Keeps scaling nice
 def mapvalue(value,normalmin,normalmax,scalemin,scalemax):
     deltascale = scalemax - scalemin
     deltanormal = normalmax - normalmin
@@ -33,8 +37,13 @@ screen = pygame.display.set_mode([screen_width, screen_height])
 pygame.display.set_caption("Mandelbrot")
 
 title = Text([1,1],WHITE)
-title.text = "Generating Set.."
+title.text = "Mandelbrot Set Generator - D.Trickey"
 title.render(screen)
+
+postext = Text([1,1 + title.height()],WHITE)
+postext.text = "Generating Set.."
+postext.render(screen)
+
 pygame.display.flip()
 
 clock = pygame.time.Clock()
@@ -42,7 +51,7 @@ done = False
 
 for x in range(1,screen_width):
     for y in range(1,screen_height):
-        c = Complex(mapvalue(x,0,screen_width,-2,2),mapvalue(y,0,screen_height,-2,2))
+        c = Complex(mapvalue(x,0,screen_width,xmin,xmin + xzoom),mapvalue(y,0,screen_height,ymin,ymin + yzoom))
         n = diverge(c)
         brightness = mapvalue(n,0,100,0,255)
         screen.fill((brightness,brightness,brightness), ([x,y], (1, 1)))
@@ -56,8 +65,12 @@ while not done:
             done = True
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             done = True
-
-    clock.tick(5)
+    pos = pygame.mouse.get_pos()
+    postext.text = "X:" + str(pos[0]) + " Y:" + str(pos[1])
+    screen.fill(BLACK,([0,0],[max(title.width(),postext.width())+1,1 + postext.height() * 2]))
+    title.render(screen)
+    postext.render(screen)
+    clock.tick(30)
     pygame.display.flip()
 
 pygame.quit()
