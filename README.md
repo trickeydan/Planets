@@ -1,10 +1,8 @@
-# Planets
-This is a simple vector simulator using Newton's laws of gravitation in a two dimensional environment. It generates a rather nice simulation of objects orbiting a planet. It is written in Python 3 and utilises the pygame library.
-* ~~Uses realistic masses and actual constants~~
-* Uses arbitary constants and masses to make an interesting simulation.
-* Command line interface to change constants
-* Displays a readout of quantities.
-* Requires pygame
-* NB: Doesn't conserve energy. Likely due to the use of arbitary constants. 
+# PythonScience
+This is my collection of maths and physics based simulators and generators. They are all written in Python3 and mostly use the pygame libary to display graphics. I've put them all in one repository to keep things neat on my github.
+
+List of projects:
+* Planets - A simple vector based gravitation simulator.
+* Mandelbrot - Generates the Mandelbrot Set.
 
 Copyright 2017 D.Trickey. Released under GPLv3.
