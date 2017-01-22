@@ -67,7 +67,7 @@ while not done:
         delta = mClickPos - mCurrPos
 
     else:
-        planets.update(planets,sun)
+        planets.update(sprites,sun)
         planets_hit = pygame.sprite.spritecollide(sun,planets, True)
         GPE = 0
         KE = 0
