@@ -4,5 +4,6 @@ This is my collection of maths and physics based simulators and generators. They
 List of projects:
 * Planets - A simple vector based gravitation simulator.
 * Mandelbrot - Generates the Mandelbrot Set.
+* Perlin2D - Creates images of Perlin Simplex noise.
 
 Copyright 2017 D.Trickey. Released under GPLv3.
