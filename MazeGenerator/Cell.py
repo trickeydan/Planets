@@ -15,24 +15,25 @@ def get_cell_num(x,y):
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 RED = (255,51,51)
+GREEN = (66, 244, 235)
 
 class Cell():
 
-    CELL_SIZE = 60 # The width of a cell in pixels.
-    GRID_NUM = 10  # The number of cells to have as the width and height.
+    CELL_SIZE = 12 # The width of a cell in pixels.
+    GRID_NUM = 57  # The number of cells to have as the width and height.
 
     def __init__(self,grid_x,grid_y):
         self.grid_x = grid_x
         self.grid_y = grid_y
-        self.pixel_x = grid_x * Cell.CELL_SIZE
-        self.pixel_y = grid_y * Cell.CELL_SIZE
+        self.pixel_x = grid_x * Cell.CELL_SIZE + Cell.CELL_SIZE
+        self.pixel_y = grid_y * Cell.CELL_SIZE + Cell.CELL_SIZE
         self.walls = [True,True] # Has walls - [Top,Left]
         self.visited = False # Not visited initially.
 
-    def draw(self,screen):
+    def draw(self,screen,colour):
         if self.visited:
             #If this cell has been visited, colour it red.
-            pygame.draw.rect(screen,RED,[self.pixel_x,self.pixel_y,Cell.CELL_SIZE,Cell.CELL_SIZE])
+            pygame.draw.rect(screen,colour,[self.pixel_x,self.pixel_y,Cell.CELL_SIZE,Cell.CELL_SIZE])
 
         if self.walls[0]:
             pygame.draw.line(screen,BLACK,[self.pixel_x,self.pixel_y],[self.pixel_x+Cell.CELL_SIZE,self.pixel_y],2) # Draw the top line of a cell

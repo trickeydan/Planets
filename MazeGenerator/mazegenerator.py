@@ -7,7 +7,7 @@
 import pygame
 from Cell import *
 
-screen_width = Cell.CELL_SIZE * Cell.GRID_NUM
+screen_width = Cell.CELL_SIZE * (Cell.GRID_NUM + 2)
 screen_height = screen_width
 
 # Initialize Pygame
@@ -53,10 +53,21 @@ while not done:
                 current = stack.pop()
 
         screen.fill(WHITE)
-        for cell in grid:
-            cell.draw(screen) # Draw every cell.
 
-    clock.tick(30)
+        for cell in grid:
+            if cell == current:
+                cell.draw(screen,GREEN) # Draw every cell.
+            else:
+                cell.draw(screen,RED) # Draw every cell.
+        pygame.draw.rect(screen,BLACK,[Cell.CELL_SIZE,Cell.CELL_SIZE,Cell.CELL_SIZE * Cell.GRID_NUM,Cell.CELL_SIZE * Cell.GRID_NUM],2)
+    else:
+        screen.fill(WHITE)
+
+        for cell in grid:
+            cell.draw(screen,WHITE) # Draw every cell.
+        pygame.draw.rect(screen,BLACK,[Cell.CELL_SIZE,Cell.CELL_SIZE,Cell.CELL_SIZE * Cell.GRID_NUM,Cell.CELL_SIZE * Cell.GRID_NUM],2)
+
+    clock.tick(120)
     pygame.display.flip()
 
 pygame.quit()
