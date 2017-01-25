@@ -19,8 +19,8 @@ GREEN = (66, 244, 235)
 
 class Cell():
 
-    CELL_SIZE = 12 # The width of a cell in pixels.
-    GRID_NUM = 57  # The number of cells to have as the width and height.
+    CELL_SIZE = 10 # The width of a cell in pixels.
+    GRID_NUM = 70  # The number of cells to have as the width and height.
 
     def __init__(self,grid_x,grid_y):
         self.grid_x = grid_x
@@ -29,9 +29,13 @@ class Cell():
         self.pixel_y = grid_y * Cell.CELL_SIZE + Cell.CELL_SIZE
         self.walls = [True,True] # Has walls - [Top,Left]
         self.visited = False # Not visited initially.
+        self.solution = False # Am I part of the solution?
+        self.num = get_cell_num(grid_x,grid_y)
 
     def draw(self,screen,colour):
-        if self.visited:
+        if self.solution:
+            pygame.draw.rect(screen,(51,51,0),[self.pixel_x,self.pixel_y,Cell.CELL_SIZE,Cell.CELL_SIZE])
+        elif self.visited:
             #If this cell has been visited, colour it red.
             pygame.draw.rect(screen,colour,[self.pixel_x,self.pixel_y,Cell.CELL_SIZE,Cell.CELL_SIZE])
 
