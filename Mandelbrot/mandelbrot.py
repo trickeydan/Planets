@@ -1,9 +1,10 @@
-import math, pygame
+import math, pygame, colorsys
 from Complex import Complex
 from Text import Text
 
 xcen = 0
 zoom = 2 # Total width /2
+zoomfactor = 2 #Amount to zoom in by
 ycen = 0
 n = 40
 
@@ -30,11 +31,12 @@ def draw(screen_width,screen_height,xcen,ycen,zoom,screen,maxn):
         for y in range(1,screen_height):
             c = Complex(mapvalue(x,0,screen_width,xcen - zoom,xcen + zoom),mapvalue(y,0,screen_height,ycen - zoom,ycen + zoom))
             n = diverge(c,maxn)
-            brightness = mapvalue(n,0,maxn,0,255)
+            brightness = mapvalue(n,0,maxn,1,0)
             try:
-                screen.fill((brightness,brightness,brightness), ([x,y], (1, 1)))
+                rgb = colorsys.hls_to_rgb(brightness,0.5, 1) #values need multiplying by 255
+                screen.fill((rgb[0] * 255,rgb[1] * 255,rgb[2] * 255), ([x,y], (1, 1)))
             except:
-                print(brightness)
+                print("Could not paint pixel")
 
 def updatetext(screen,postext,title):
     screen.fill(BLACK,([0,0],[max(title.width(),postext.width())+1,1 + postext.height() * 2]))
@@ -70,7 +72,7 @@ done = False
 
 draw(screen_width,screen_height,xcen,ycen,zoom,screen,n)
 
-title.text = "Mandelbrot Set"
+title.text = "Mandelbrot Set | Zoom: " + str(1/zoom)
 title.render(screen)
 
 while not done:
@@ -81,12 +83,19 @@ while not done:
             done = True
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_n:
             n = int(input("Enter a new value of n: "))
+            title.text = "Mandelbrot Set | Zoom: " + str(1/zoom)
+            postext.text = "Generating new set.."
+            updatetext(screen,postext,title)
+            pygame.display.flip()
+            draw(screen_width,screen_height,xcen,ycen,zoom,screen,n)
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_z:
+            zoomfactor = int(input("Enter a new zoomfactor (currently " + str(zoomfactor) + "): "))
         elif event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
             xcen = mapvalue(pos[0],0,screen_width,xcen - zoom,xcen + zoom)
             ycen = mapvalue(pos[1],0,screen_height,ycen - zoom,ycen + zoom)
-            zoom = zoom /2
-            print("Zoom: " + str(zoom))
+            zoom = zoom / zoomfactor
+            title.text = "Mandelbrot Set | Zoom: " + str(1/zoom)
             postext.text = "Generating new set.."
             updatetext(screen,postext,title)
             pygame.display.flip()
